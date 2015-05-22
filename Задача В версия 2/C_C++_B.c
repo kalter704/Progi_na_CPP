@@ -29,9 +29,20 @@ struct StackOperands {
 			size;
 };
 
-int fillingArrUnits(char* string, struct UnitOfExpression* arr_units) {
+///////////////////////////////////////////
+struct UnitOfExpression* getVector(char* string, int* index_str) {
+	
+}
+
+///////////////////////////////////////////
+struct UnitOfExpression* getNumber(char* string, int* index_str) {
+	
+}
+
+// при экстенном выходе надо отчищать память!!!
+int fillingArrUnits(char* string, struct UnitOfExpression* arr_units, int* size_arr_units, int* last_arr_units) {
 	struct StackOperations stack_oper;
-	stack_oper.stack = (struct UnitOfExpression*)calloc(INITIAL_STACK_SIZE, sizeof(struct UnitOfExpression));
+	stack_oper.stack = (char*)calloc(INITIAL_STACK_SIZE, sizeof(char));
 	if(stack_oper.stack == NULL) {
 		return false;
 	}
@@ -39,18 +50,47 @@ int fillingArrUnits(char* string, struct UnitOfExpression* arr_units) {
 	stack_oper.top = 0;
 	
 	int index_str = 0;
-	while(string[index_str]) {
-		
+	char character = string[index_str];
+	while(character != '\0') {
+		if(stack_oper.size == stack_oper.top) {
+			stack_oper.size *= 2;
+			realloc((void*)stack_oper.stack, stack_oper.size * sizeof(char));
+			if(stack_oper.stack == NULL) {
+				return false;
+			}
+		}
+		if(character == '{') {
+			struct UnitOfExpression* tempUnit;
+			tempUnit = getVector(string, &index_str); /////////// Заглушка
+			if(tempUnit == NULL) {
+				return false;
+			}
+			stack_oper.stack[stack_oper.top++] = tempUnit;
+		} else if((character >= '0') && (character <= '9')) {
+			////
+			struct UnitOfExpression* tempUnit;
+			tempUnit = getNumber(string, &index_str); /////////// Заглушка
+			if(tempUnit == NULL) {
+				return false;
+			}
+			stack_oper.stack[stack_oper.top++] = tempUnit;
+		} else if(character > ')') {
+			
+		} else {
+			
+		}
 		++index_str;
+		string[index_str];
+		for( ; string[index_str] == ' '; ++index_str) {}
 	}
 	
 	return true;
 }
 
 // Надо ддописать
-int calculateExpression(struct UnitOfExpression* arr_units, ) {
+int calculateExpression(struct UnitOfExpression* arr_units, struct UnitOfExpression* result) {
 	
-	return true
+	return true;
 }
 
 int main() {
@@ -61,24 +101,23 @@ int main() {
 	}
 	
 	struct UnitOfExpression* arr_units = (struct UnitOfExpression*)calloc(INITIAL_STACK_SIZE, sizeof(struct UnitOfExpression));
+	int size_arr_units = INITIAL_STACK_SIZE,
+			last_arr_units = 0;
+	
 	if(arr_units == NULL) {
 		printf("[error]"); 
 		return 1;
 	}
-	if(fillingArrUnits(string, arr_units) == false) {
+	if(fillingArrUnits(string, arr_units, &size_arr_units, &last_arr_units) == false) {
 		printf("[error]"); 
 		return 1;
 	}
 	
-	/*
-	Надо додумать!!!!!!!!!!!!!
-		
 	struct UnitOfExpression* result;
-	if(calculateExpression(arr_units, ) == false) {
+	if(calculateExpression(arr_units, result) == false) {
 		printf("[error]"); 
 		return 1;
 	}
-	*/
 	
 	free(arr_units);
 	return 0;
